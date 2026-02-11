@@ -1,333 +1,248 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokédex</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #DC143C;
-            color: white;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            font-size: 18px; /* Aumentado o tamanho da fonte base */
-        }
-        .container {
-            width: 90%; /* Responsivo: largura relativa */
-            max-width: 600px; /* Máximo para desktop */
-            height: auto; /* Altura automática para responsividade */
-            min-height: 500px;
-            background-color: #DC143C;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-        }
-        .title {
-            font-size: 32px; /* Aumentado o tamanho da fonte do título */
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .input-frame {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap; /* Para quebrar em telas pequenas */
-        }
-        .input-label {
-            margin-right: 10px;
-            font-size: 20px; /* Aumentado */
-        }
-        .input-field {
-            flex: 1;
-            padding: 10px; /* Aumentado padding */
-            font-size: 18px; /* Aumentado */
-        }
-        .search-button {
-            background-color: #FFD700;
-            color: black;
-            border: none;
-            padding: 10px 15px; /* Aumentado */
-            cursor: pointer;
-            margin-left: 10px;
-            font-size: 18px; /* Aumentado */
-        }
-        .output-area {
-            flex: 1;
-            background-color: white;
-            color: black;
-            font-family: 'Courier New', monospace;
-            font-size: 14px; /* Aumentado de 10px para 14px */
-            padding: 15px; /* Aumentado */
-            border: none;
-            resize: none;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            min-height: 300px; /* Altura mínima para melhor visualização */
-        }
-        /* Media queries para responsividade */
-        @media (max-width: 768px) { /* Tablet e mobile */
-            body {
-                font-size: 16px;
-            }
-            .container {
-                width: 95%;
-                padding: 15px;
-            }
-            .title {
-                font-size: 28px;
-            }
-            .input-label {
-                font-size: 18px;
-                margin-bottom: 10px;
-                width: 100%; /* Label em linha própria em mobile */
-            }
-            .input-frame {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .search-button {
-                margin-left: 0;
-                margin-top: 10px;
-                align-self: flex-start;
-            }
-            .output-area {
-                font-size: 12px; /* Ajuste para telas pequenas */
-            }
-        }
-        @media (max-width: 480px) { /* Mobile pequeno */
-            .title {
-                font-size: 24px;
-            }
-            .input-field, .search-button {
-                font-size: 16px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pokédex</title>
+
+<style>
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #DC143C;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Corpo da Pokédex */
+.container {
+    width: 100%;
+    max-width: 650px;
+    background-color: #B22222;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Título */
+.title {
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+/* Área de busca */
+.input-frame {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.input-label {
+    width: 100%;
+    color: white;
+}
+
+.input-field {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+}
+
+.search-button {
+    background-color: #FFD700;
+    color: black;
+    border: none;
+    padding: 8px 14px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+/* Sugestões */
+.suggestions {
+    background: white;
+    color: #333;
+    max-height: 120px;
+    overflow-y: auto;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.suggestion-item {
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #eeeeee;
+}
+
+/* 🔥 Tela da Pokédex */
+.pokedex-screen {
+    background: #1e1e1e;          /* Moldura da tela */
+    padding: 15px;
+    border-radius: 15px;
+    margin-top: 10px;
+}
+
+.screen-display {
+    background: white;            /* Tela branca */
+    border-radius: 10px;
+    padding: 15px;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-y: auto;
+}
+
+/* Imagem do Pokémon */
+.screen-display img {
+    width: clamp(120px, 30vw, 200px);
+    margin-bottom: 10px;
+}
+
+/* Texto interno da tela */
+.pokemon-info {
+    width: 100%;
+    font-family: 'Courier New', monospace;
+    font-size: clamp(14px, 2vw, 18px);
+    color: black;
+    white-space: pre-line;
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+    .input-frame { flex-direction: column; }
+    .search-button { width: 100%; }
+}
+
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="title">Pokédex</div>
-        <div class="input-frame">
-            <label class="input-label">Digite o nome do Pokémon:</label>
-            <input type="text" class="input-field" id="pokemon-input">
-            <button class="search-button" onclick="searchPokemon()">Pesquisar</button>
-        </div>
-        <textarea class="output-area" id="output-area" readonly></textarea>
+
+<div class="container">
+
+    <div class="title">Pokédex</div>
+
+    <div class="input-frame">
+        <label class="input-label">Digite o nome do Pokémon:</label>
+        <input type="text" class="input-field" id="pokemon-input" oninput="showSuggestions()">
+        <button class="search-button" onclick="searchPokemon()">Pesquisar</button>
     </div>
 
-    <script>
-        // Dados da Pokédex (expandido para os 151 Pokémon de Kanto)
-        // Nota: Natureza e características são baseadas em dados gerais; naturezas são inventadas para simplicidade (Dócil, Selvagem, etc.)
-        const pokedex = {
-            "bulbasaur": {
-                nome: "Bulbasaur",
-                tipos: ["Grama", "Veneno"],
-                natureza: "Dócil",
-                caracteristicas: "Bulbasaur é um Pokémon grama/veneno com uma planta nas costas que cresce com ele. É dócil e confiável, usando ataques como Vine Whip e Razor Leaf. Fraquezas: Tipos Fogo, Psíquico, Voador e Gelo. Evolui para Ivysaur e depois Venusaur. É conhecido por sua lealdade e habilidade de fotossíntese."
-            },
-            "ivysaur": {
-                nome: "Ivysaur",
-                tipos: ["Grama", "Veneno"],
-                natureza: "Dócil",
-                caracteristicas: "Ivysaur é a evolução de Bulbasaur, um Pokémon grama/veneno com uma flor nas costas. É dócil e protetor, usando ataques como Razor Leaf e Poison Powder. Fraquezas: Tipos Fogo, Psíquico, Voador e Gelo. Evolui para Venusaur."
-            },
-            "venusaur": {
-                nome: "Venusaur",
-                tipos: ["Grama", "Veneno"],
-                natureza: "Dócil",
-                caracteristicas: "Venusaur é a evolução final de Bulbasaur, um Pokémon grama/veneno gigante com uma flor nas costas. É dócil e poderoso, usando Solar Beam e Earthquake. Fraquezas: Tipos Fogo, Psíquico, Voador e Gelo."
-            },
-            "charmander": {
-                nome: "Charmander",
-                tipos: ["Fogo"],
-                natureza: "Dócil",
-                caracteristicas: "Charmander é um Pokémon fogo lagarto, com uma chama na cauda. É dócil e corajoso, usando ataques como Ember e Scratch. Fraquezas: Tipos Água, Terra e Pedra. Evolui para Charmeleon e depois Charizard."
-            },
-            "charmeleon": {
-                nome: "Charmeleon",
-                tipos: ["Fogo"],
-                natureza: "Selvagem",
-                caracteristicas: "Charmeleon é a evolução de Charmander, um Pokémon fogo mais agressivo. É selvagem e territorial, usando Flamethrower e Dragon Rage. Fraquezas: Tipos Água, Terra e Pedra. Evolui para Charizard."
-            },
-            "charizard": {
-                nome: "Charizard",
-                tipos: ["Fogo", "Voador"],
-                natureza: "Selvagem",
-                caracteristicas: "Charizard é um Pokémon dragão de fogo imponente, com asas poderosas e uma chama na cauda que indica sua força. Ele é selvagem e territorial, cuspindo fogo intenso. Suas habilidades incluem Flamethrower, Dragon Claw e voos rápidos. Fraquezas: Tipos Água, Elétrico e Pedra. Evolui de Charmeleon e é uma das evoluções de Charmander. É um dos Pokémon mais populares e poderosos."
-            },
-            "squirtle": {
-                nome: "Squirtle",
-                tipos: ["Água"],
-                natureza: "Dócil",
-                caracteristicas: "Squirtle é um Pokémon água tartaruga, com uma carapaça resistente e habilidades de natação. É dócil e protetor, lançando jatos de água com ataques como Water Gun e Bubble. Fraquezas: Tipos Grama e Elétrico. Evolui para Wartortle e depois Blastoise. É um parceiro inicial confiável em aventuras aquáticas."
-            },
-            "wartortle": {
-                nome: "Wartortle",
-                tipos: ["Água"],
-                natureza: "Dócil",
-                caracteristicas: "Wartortle é a evolução de Squirtle, um Pokémon água com orelhas e cauda maiores. É dócil e estratégico, usando Water Pulse e Bite. Fraquezas: Tipos Grama e Elétrico. Evolui para Blastoise."
-            },
-            "blastoise": {
-                nome: "Blastoise",
-                tipos: ["Água"],
-                natureza: "Dócil",
-                caracteristicas: "Blastoise é a evolução final de Squirtle, um Pokémon água poderoso com canhões nas costas para disparar água pressurizada. É dócil e estratégico, usando Hydro Pump e Skull Bash. Fraquezas: Tipos Grama e Elétrico. É conhecido por sua força e lealdade aos treinadores."
-            },
-            "caterpie": {
-                nome: "Caterpie",
-                tipos: ["Inseto"],
-                natureza: "Dócil",
-                caracteristicas: "Caterpie é um Pokémon inseto lagarta, comendo folhas constantemente. É dócil e inofensivo, usando String Shot. Fraquezas: Tipos Fogo, Voador e Pedra. Evolui para Metapod e depois Butterfree."
-            },
-            "metapod": {
-                nome: "Metapod",
-                tipos: ["Inseto"],
-                natureza: "Dócil",
-                caracteristicas: "Metapod é a evolução de Caterpie, um Pokémon inseto casulo imóvel. É dócil e defensivo, usando Harden. Fraquezas: Tipos Fogo, Voador e Pedra. Evolui para Butterfree."
-            },
-            "butterfree": {
-                nome: "Butterfree",
-                tipos: ["Inseto", "Voador"],
-                natureza: "Dócil",
-                caracteristicas: "Butterfree é a evolução de Metapod, um Pokémon inseto voador com asas coloridas. É dócil e gracioso, usando Confusion e Gust. Fraquezas: Tipos Fogo, Elétrico, Gelo e Pedra."
-            },
-            "weedle": {
-                nome: "Weedle",
-                tipos: ["Inseto", "Veneno"],
-                natureza: "Selvagem",
-                caracteristicas: "Weedle é um Pokémon inseto veneno com ferrão. É selvagem e agressivo, usando Poison Sting. Fraquezas: Tipos Fogo, Psíquico e Voador. Evolui para Kakuna e depois Beedrill."
-            },
-            "kakuna": {
-                nome: "Kakuna",
-                tipos: ["Inseto", "Veneno"],
-                natureza: "Selvagem",
-                caracteristicas: "Kakuna é a evolução de Weedle, um Pokémon inseto veneno casulo. É selvagem e defensivo, usando Harden. Fraquezas: Tipos Fogo, Psíquico e Voador. Evolui para Beedrill."
-            },
-            "beedrill": {
-                nome: "Beedrill",
-                tipos: ["Inseto", "Veneno"],
-                natureza: "Selvagem",
-                caracteristicas: "Beedrill é a evolução de Kakuna, um Pokémon inseto veneno com ferrões. É selvagem e territorial, usando Twineedle e Fury Attack. Fraquezas: Tipos Fogo, Psíquico e Voador."
-            },
-            "pidgey": {
-                nome: "Pidgey",
-                tipos: ["Normal", "Voador"],
-                natureza: "Dócil",
-                caracteristicas: "Pidgey é um Pokémon normal voador pássaro pequeno. É dócil e comum, usando Gust e Tackle. Fraquezas: Tipos Elétrico, Gelo e Pedra. Evolui para Pidgeotto e depois Pidgeot."
-            },
-            "pidgeotto": {
-                nome: "Pidgeotto",
-                tipos: ["Normal", "Voador"],
-                natureza: "Dócil",
-                caracteristicas: "Pidgeotto é a evolução de Pidgey, um Pokémon normal voador maior. É dócil e protetor, usando Wing Attack. Fraquezas: Tipos Elétrico, Gelo e Pedra. Evolui para Pidgeot."
-            },
-            "pidgeot": {
-                nome: "Pidgeot",
-                tipos: ["Normal", "Voador"],
-                natureza: "Dócil",
-                caracteristicas: "Pidgeot é a evolução de Pidgeotto, um Pokémon normal voador majestoso. É dócil e rápido, usando Hurricane e Quick Attack. Fraquezas: Tipos Elétrico, Gelo e Pedra."
-            },
-            "rattata": {
-                nome: "Rattata",
-                tipos: ["Normal"],
-                natureza: "Selvagem",
-                caracteristicas: "Rattata é um Pokémon normal rato, comum e prolífico. É selvagem e furtivo, usando Hyper Fang. Fraquezas: Tipo Lutador. Evolui para Raticate."
-            },
-            "raticate": {
-                nome: "Raticate",
-                tipos: ["Normal"],
-                natureza: "Selvagem",
-                caracteristicas: "Raticate é a evolução de Rattata, um Pokémon normal rato maior. É selvagem e agressivo, usando Super Fang. Fraquezas: Tipo Lutador."
-            },
-            "spearow": {
-                nome: "Spearow",
-                tipos: ["Normal", "Voador"],
-                natureza: "Selvagem",
-                caracteristicas: "Spearow é um Pokémon normal voador pássaro agressivo. É selvagem e territorial, usando Peck. Fraquezas: Tipos Elétrico, Gelo e Pedra. Evolui para Fearow."
-            },
-            "fearow": {
-                nome: "Fearow",
-                tipos: ["Normal", "Voador"],
-                natureza: "Selvagem",
-                caracteristicas: "Fearow é a evolução de Spearow, um Pokémon normal voador longo. É selvagem e caçador, usando Drill Peck. Fraquezas: Tipos Elétrico, Gelo e Pedra."
-            },
-            "ekans": {
-                nome: "Ekans",
-                tipos: ["Veneno"],
-                natureza: "Selvagem",
-                caracteristicas: "Ekans é um Pokémon veneno cobra, enrolando-se. É selvagem e venenoso, usando Poison Sting. Fraquezas: Tipos Terra e Psíquico. Evolui para Arbok."
-            },
-            "arbok": {
-                nome: "Arbok",
-                tipos: ["Veneno"],
-                natureza: "Selvagem",
-                caracteristicas: "Arbok é a evolução de Ekans, um Pokémon veneno cobra intimidante. É selvagem e ameaçador, usando Glare. Fraquezas: Tipos Terra e Psíquico."
-            },
-            "pikachu": {
-                nome: "Pikachu",
-                tipos: ["Elétrico"],
-                natureza: "Dócil",
-                caracteristicas: "Pikachu é um Pokémon elétrico pequeno e amarelo, conhecido por suas bochechas vermelhas que armazenam eletricidade. Ele é dócil e leal aos treinadores, capaz de gerar choques elétricos poderosos. Suas habilidades incluem ataques como Thunderbolt e Quick Attack. Fraquezas: Tipos Água e Terra. Evolui de Pichu e para Raichu. É icônico e aparece em muitos jogos e mídias."
-            },
-            "raichu": {
-                nome: "Raichu",
-                tipos: ["Elétrico"],
-                natureza: "Dócil",
-                caracteristicas: "Raichu é a evolução de Pikachu, um Pokémon elétrico maior. É dócil e poderoso, usando Thunder. Fraquezas: Tipos Água e Terra."
-            },
-            "sandshrew": {
-                nome: "Sandshrew",
-                tipos: ["Terra"],
-                natureza: "Selvagem",
-                caracteristicas: "Sandshrew é um Pokémon terra tatu, cavando buracos. É selvagem e defensivo, usando Sand Attack. Fraquezas: Tipos Água, Grama e Gelo. Evolui para Sandslash."
-            },
-            "sandslash": {
-                nome: "Sandslash",
-                tipos: ["Terra"],
-                natureza: "Selvagem",
-                caracteristicas: "Sandslash é a evolução de Sandshrew, um Pokémon terra com espinhos. É selvagem e agressivo, usando Slash. Fraquezas: Tipos Água, Grama e Gelo."
-            },
-            "nidoran-f": {
-                nome: "Nidoran♀",
-                tipos: ["Veneno"],
-                natureza: "Dócil",
-                caracteristicas: "Nidoran♀ é um Pokémon veneno fêmea, com orelhas sensíveis. É dócil e protetora, usando Poison Sting. Fraquezas: Tipos Terra e Psíquico. Evolui para Nidorina e depois Nidoqueen."
-            },
-            "nidorina": {
-                nome: "Nidorina",
-                tipos: ["Veneno"],
-                natureza: "Dócil",
-                caracteristicas: "Nidorina é a evolução de Nidoran♀, um Pokémon veneno maior. É dócil e forte, usando Double Kick. Fraquezas: Tipos Terra e Psíquico. Evolui para Nidoqueen."
-            },
-            "nidoqueen": {
-                nome: "Nidoqueen",
-                tipos: ["Veneno", "Terra"],
-                natureza: "Dócil",
-                caracteristicas: "Nidoqueen é a evolução de Nidorina, um Pokémon veneno terra poderoso. É dócil e maternal, usando Earthquake. Fraquezas: Tipos Água, Gelo e Terra."
-            },
-            "nidoran-m": {
-                nome: "Nidoran♂",
-                tipos: ["Veneno"],
-                natureza: "Selvagem",
-                caracteristicas: "Nidoran♂ é um Pokémon veneno macho, com chifres. É selvagem e territorial, usando Horn Attack. Fraquezas: Tipos Terra e Psíquico. Evolui para Nidorino e depois Nidoking."
-            },
-            "nidorino": {
-                nome: "Nidorino",
-                tipos: ["Veneno"],
-                natureza: "Selvagem",
-                caracteristicas: "Nidorino é a evolução de Nidoran♂, um Pokémon veneno agressivo. É selvagem e forte, usando Poison Jab. Fraquezas: Tipos Terra e Psíquico. Evolui para Nidoking."
-            },
-            "nidoking": {
-                nome: "Nidoking",
-                tipos: ["Veneno", "Terra"],
-                natureza: "Selvagem",
-                caracteristicas: "
+    <div id="suggestions" class="suggestions"></div>
+
+    <!-- 🔥 Tela estilo Pokédex -->
+    <div class="pokedex-screen">
+        <div class="screen-display" id="screen-display">
+            <div class="pokemon-info" id="pokemon-info">
+Digite o nome de um Pokémon para começar.
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+let kantoList = [];
+
+window.onload = async function () {
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
+    const data = await response.json();
+    kantoList = data.results.map(p => p.name);
+};
+
+function showSuggestions() {
+    const input = document.getElementById("pokemon-input").value.toLowerCase();
+    const suggestionsDiv = document.getElementById("suggestions");
+    suggestionsDiv.innerHTML = "";
+
+    if (!input) return;
+
+    const filtered = kantoList.filter(name => name.startsWith(input));
+
+    filtered.slice(0, 8).forEach(name => {
+        const div = document.createElement("div");
+        div.classList.add("suggestion-item");
+        div.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+        div.onclick = function () {
+            document.getElementById("pokemon-input").value = name;
+            suggestionsDiv.innerHTML = "";
+        };
+        suggestionsDiv.appendChild(div);
+    });
+}
+
+async function searchPokemon() {
+    const input = document.getElementById("pokemon-input").value.toLowerCase().trim();
+    const infoDiv = document.getElementById("pokemon-info");
+    const screen = document.getElementById("screen-display");
+    const suggestionsDiv = document.getElementById("suggestions");
+    suggestionsDiv.innerHTML = "";
+
+    if (!input) {
+        infoDiv.textContent = "Digite o nome de um Pokémon.";
+        screen.innerHTML = `<div class="pokemon-info">Digite o nome de um Pokémon.</div>`;
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${input}`);
+        if (!response.ok) throw new Error();
+
+        const data = await response.json();
+
+        if (data.id > 151) {
+            screen.innerHTML = `<div class="pokemon-info">Este Pokémon não pertence à região de Kanto.</div>`;
+            return;
+        }
+
+        const nome = data.name.charAt(0).toUpperCase() + data.name.slice(1);
+        const tipos = data.types.map(t => t.type.name).join(", ");
+        const habilidades = data.abilities.map(a => a.ability.name).join(", ");
+        const altura = data.height / 10 + " m";
+        const peso = data.weight / 10 + " kg";
+        const sprite = data.sprites.other["official-artwork"].front_default;
+
+        screen.innerHTML = `
+            <img src="${sprite}" alt="${nome}">
+            <div class="pokemon-info">
+Nome: ${nome}
+Número: #${data.id}
+Tipo(s): ${tipos}
+Altura: ${altura}
+Peso: ${peso}
+Habilidades: ${habilidades}
+
+Região: Kanto (1ª Geração)
+            </div>
+        `;
+
+    } catch {
+        screen.innerHTML = `<div class="pokemon-info">Pokémon não encontrado.</div>`;
+    }
+}
+
+</script>
+
+</body>
+</html>
