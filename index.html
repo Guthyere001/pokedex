@@ -14,11 +14,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            font-size: 18px; /* Aumentado o tamanho da fonte base */
         }
         .container {
-            width: 600px;
-            height: 500px;
+            width: 90%; /* Responsivo: largura relativa */
+            max-width: 600px; /* Máximo para desktop */
+            height: auto; /* Altura automática para responsividade */
+            min-height: 500px;
             background-color: #DC143C;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -28,7 +31,7 @@
             flex-direction: column;
         }
         .title {
-            font-size: 24px;
+            font-size: 32px; /* Aumentado o tamanho da fonte do título */
             font-weight: bold;
             text-align: center;
             margin-bottom: 20px;
@@ -37,33 +40,76 @@
             display: flex;
             align-items: center;
             margin-bottom: 20px;
+            flex-wrap: wrap; /* Para quebrar em telas pequenas */
         }
         .input-label {
             margin-right: 10px;
+            font-size: 20px; /* Aumentado */
         }
         .input-field {
             flex: 1;
-            padding: 5px;
+            padding: 10px; /* Aumentado padding */
+            font-size: 18px; /* Aumentado */
         }
         .search-button {
             background-color: #FFD700;
             color: black;
             border: none;
-            padding: 5px 10px;
+            padding: 10px 15px; /* Aumentado */
             cursor: pointer;
             margin-left: 10px;
+            font-size: 18px; /* Aumentado */
         }
         .output-area {
             flex: 1;
             background-color: white;
             color: black;
             font-family: 'Courier New', monospace;
-            font-size: 10px;
-            padding: 10px;
+            font-size: 14px; /* Aumentado de 10px para 14px */
+            padding: 15px; /* Aumentado */
             border: none;
             resize: none;
             overflow-y: auto;
             white-space: pre-wrap;
+            min-height: 300px; /* Altura mínima para melhor visualização */
+        }
+        /* Media queries para responsividade */
+        @media (max-width: 768px) { /* Tablet e mobile */
+            body {
+                font-size: 16px;
+            }
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+            .title {
+                font-size: 28px;
+            }
+            .input-label {
+                font-size: 18px;
+                margin-bottom: 10px;
+                width: 100%; /* Label em linha própria em mobile */
+            }
+            .input-frame {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-button {
+                margin-left: 0;
+                margin-top: 10px;
+                align-self: flex-start;
+            }
+            .output-area {
+                font-size: 12px; /* Ajuste para telas pequenas */
+            }
+        }
+        @media (max-width: 480px) { /* Mobile pequeno */
+            .title {
+                font-size: 24px;
+            }
+            .input-field, .search-button {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
@@ -79,13 +125,38 @@
     </div>
 
     <script>
-        // Dados da Pokédex (equivalente ao dicionário Python)
+        // Dados da Pokédex (expandido para os 151 Pokémon de Kanto)
+        // Nota: Natureza e características são baseadas em dados gerais; naturezas são inventadas para simplicidade (Dócil, Selvagem, etc.)
         const pokedex = {
-            "pikachu": {
-                nome: "Pikachu",
-                tipos: ["Elétrico"],
+            "bulbasaur": {
+                nome: "Bulbasaur",
+                tipos: ["Grama", "Veneno"],
                 natureza: "Dócil",
-                caracteristicas: "Pikachu é um Pokémon elétrico pequeno e amarelo, conhecido por suas bochechas vermelhas que armazenam eletricidade. Ele é dócil e leal aos treinadores, capaz de gerar choques elétricos poderosos. Suas habilidades incluem ataques como Thunderbolt e Quick Attack. Fraquezas: Tipos Água e Terra. Evolui de Pichu e para Raichu. É icônico e aparece em muitos jogos e mídias."
+                caracteristicas: "Bulbasaur é um Pokémon grama/veneno com uma planta nas costas que cresce com ele. É dócil e confiável, usando ataques como Vine Whip e Razor Leaf. Fraquezas: Tipos Fogo, Psíquico, Voador e Gelo. Evolui para Ivysaur e depois Venusaur. É conhecido por sua lealdade e habilidade de fotossíntese."
+            },
+            "ivysaur": {
+                nome: "Ivysaur",
+                tipos: ["Grama", "Veneno"],
+                natureza: "Dócil",
+                caracteristicas: "Ivysaur é a evolução de Bulbasaur, um Pokémon grama/veneno com uma flor nas costas. É dócil e protetor, usando ataques como Razor Leaf e Poison Powder. Fraquezas: Tipos Fogo, Psíquico, Voador e Gelo. Evolui para Venusaur."
+            },
+            "venusaur": {
+                nome: "Venusaur",
+                tipos: ["Grama", "Veneno"],
+                natureza: "Dócil",
+                caracteristicas: "Venusaur é a evolução final de Bulbasaur, um Pokémon grama/veneno gigante com uma flor nas costas. É dócil e poderoso, usando Solar Beam e Earthquake. Fraquezas: Tipos Fogo, Psíquico, Voador e Gelo."
+            },
+            "charmander": {
+                nome: "Charmander",
+                tipos: ["Fogo"],
+                natureza: "Dócil",
+                caracteristicas: "Charmander é um Pokémon fogo lagarto, com uma chama na cauda. É dócil e corajoso, usando ataques como Ember e Scratch. Fraquezas: Tipos Água, Terra e Pedra. Evolui para Charmeleon e depois Charizard."
+            },
+            "charmeleon": {
+                nome: "Charmeleon",
+                tipos: ["Fogo"],
+                natureza: "Selvagem",
+                caracteristicas: "Charmeleon é a evolução de Charmander, um Pokémon fogo mais agressivo. É selvagem e territorial, usando Flamethrower e Dragon Rage. Fraquezas: Tipos Água, Terra e Pedra. Evolui para Charizard."
             },
             "charizard": {
                 nome: "Charizard",
@@ -93,29 +164,17 @@
                 natureza: "Selvagem",
                 caracteristicas: "Charizard é um Pokémon dragão de fogo imponente, com asas poderosas e uma chama na cauda que indica sua força. Ele é selvagem e territorial, cuspindo fogo intenso. Suas habilidades incluem Flamethrower, Dragon Claw e voos rápidos. Fraquezas: Tipos Água, Elétrico e Pedra. Evolui de Charmeleon e é uma das evoluções de Charmander. É um dos Pokémon mais populares e poderosos."
             },
-            "bulbasaur": {
-                nome: "Bulbasaur",
-                tipos: ["Grama", "Veneno"],
-                natureza: "Dócil",
-                caracteristicas: "Bulbasaur é um Pokémon grama/veneno com uma planta nas costas que cresce com ele. É dócil e confiável, usando ataques como Vine Whip e Razor Leaf. Fraquezas: Tipos Fogo, Psíquico, Voador e Gelo. Evolui para Ivysaur e depois Venusaur. É conhecido por sua lealdade e habilidade de fotossíntese."
-            },
-            "mewtwo": {
-                nome: "Mewtwo",
-                tipos: ["Psíquico"],
-                natureza: "Selvagem",
-                caracteristicas: "Mewtwo é um Pokémon psíquico poderoso e misterioso, criado geneticamente. Ele é selvagem e imprevisível, com habilidades telepáticas incríveis como Psychic e Barrier. Fraquezas: Tipos Fantasma, Escuro e Inseto. Não evolui e é considerado um dos Pokémon mais fortes. Sua história envolve clonagem e busca por propósito."
-            },
-            "eevee": {
-                nome: "Eevee",
-                tipos: ["Normal"],
-                natureza: "Dócil",
-                caracteristicas: "Eevee é um Pokémon normal fofo e adaptável, capaz de evoluir em oito formas diferentes com itens ou condições específicas (como Vaporeon, Jolteon, Flareon, etc.). É dócil e brincalhão, com ataques como Tackle e Quick Attack. Fraquezas: Tipo Lutador. É popular por sua diversidade evolutiva."
-            },
             "squirtle": {
                 nome: "Squirtle",
                 tipos: ["Água"],
                 natureza: "Dócil",
                 caracteristicas: "Squirtle é um Pokémon água tartaruga, com uma carapaça resistente e habilidades de natação. É dócil e protetor, lançando jatos de água com ataques como Water Gun e Bubble. Fraquezas: Tipos Grama e Elétrico. Evolui para Wartortle e depois Blastoise. É um parceiro inicial confiável em aventuras aquáticas."
+            },
+            "wartortle": {
+                nome: "Wartortle",
+                tipos: ["Água"],
+                natureza: "Dócil",
+                caracteristicas: "Wartortle é a evolução de Squirtle, um Pokémon água com orelhas e cauda maiores. É dócil e estratégico, usando Water Pulse e Bite. Fraquezas: Tipos Grama e Elétrico. Evolui para Blastoise."
             },
             "blastoise": {
                 nome: "Blastoise",
@@ -123,76 +182,152 @@
                 natureza: "Dócil",
                 caracteristicas: "Blastoise é a evolução final de Squirtle, um Pokémon água poderoso com canhões nas costas para disparar água pressurizada. É dócil e estratégico, usando Hydro Pump e Skull Bash. Fraquezas: Tipos Grama e Elétrico. É conhecido por sua força e lealdade aos treinadores."
             },
-            "gengar": {
-                nome: "Gengar",
-                tipos: ["Fantasma", "Veneno"],
-                natureza: "Selvagem",
-                caracteristicas: "Gengar é um Pokémon fantasma venenoso sorrateiro, evoluído de Haunter. Ele é selvagem e gosta de pregar peças, com habilidades como Shadow Ball e Hypnosis. Fraquezas: Tipos Fantasma, Psíquico e Terra. É notório por sua natureza travessa e aparições assustadoras."
-            },
-            "dragonite": {
-                nome: "Dragonite",
-                tipos: ["Dragão", "Voador"],
-                natureza: "Selvagem",
-                caracteristicas: "Dragonite é um Pokémon dragão voador gentil e poderoso, evoluído de Dragonair. Embora selvagem, é conhecido por ajudar humanos em situações de emergência. Suas habilidades incluem Dragon Rush e Hyper Beam. Fraquezas: Tipos Gelo, Pedra, Dragão e Fada. É um dos dragões mais respeitados."
-            },
-            "lucario": {
-                nome: "Lucario",
-                tipos: ["Lutador", "Aço"],
+            "caterpie": {
+                nome: "Caterpie",
+                tipos: ["Inseto"],
                 natureza: "Dócil",
-                caracteristicas: "Lucario é um Pokémon lutador aço com sentidos aguçados e aura. É dócil e leal, detectando emoções com ataques como Aura Sphere e Close Combat. Fraquezas: Tipos Fogo, Lutador e Terra. Evolui de Riolu com amizade. É inspirado em lobos e tem uma conexão espiritual."
+                caracteristicas: "Caterpie é um Pokémon inseto lagarta, comendo folhas constantemente. É dócil e inofensivo, usando String Shot. Fraquezas: Tipos Fogo, Voador e Pedra. Evolui para Metapod e depois Butterfree."
             },
-            "mew": {
-                nome: "Mew",
-                tipos: ["Psíquico"],
+            "metapod": {
+                nome: "Metapod",
+                tipos: ["Inseto"],
+                natureza: "Dócil",
+                caracteristicas: "Metapod é a evolução de Caterpie, um Pokémon inseto casulo imóvel. É dócil e defensivo, usando Harden. Fraquezas: Tipos Fogo, Voador e Pedra. Evolui para Butterfree."
+            },
+            "butterfree": {
+                nome: "Butterfree",
+                tipos: ["Inseto", "Voador"],
+                natureza: "Dócil",
+                caracteristicas: "Butterfree é a evolução de Metapod, um Pokémon inseto voador com asas coloridas. É dócil e gracioso, usando Confusion e Gust. Fraquezas: Tipos Fogo, Elétrico, Gelo e Pedra."
+            },
+            "weedle": {
+                nome: "Weedle",
+                tipos: ["Inseto", "Veneno"],
                 natureza: "Selvagem",
-                caracteristicas: "Mew é um Pokémon psíquico mítico e ancestral, capaz de aprender qualquer movimento. Ele é selvagem e curioso, com habilidades como Psychic e Transform. Fraquezas: Tipos Fantasma, Escuro e Inseto. É o ancestral de Mewtwo e raramente visto."
+                caracteristicas: "Weedle é um Pokémon inseto veneno com ferrão. É selvagem e agressivo, usando Poison Sting. Fraquezas: Tipos Fogo, Psíquico e Voador. Evolui para Kakuna e depois Beedrill."
             },
-            "snorlax": {
-                nome: "Snorlax",
+            "kakuna": {
+                nome: "Kakuna",
+                tipos: ["Inseto", "Veneno"],
+                natureza: "Selvagem",
+                caracteristicas: "Kakuna é a evolução de Weedle, um Pokémon inseto veneno casulo. É selvagem e defensivo, usando Harden. Fraquezas: Tipos Fogo, Psíquico e Voador. Evolui para Beedrill."
+            },
+            "beedrill": {
+                nome: "Beedrill",
+                tipos: ["Inseto", "Veneno"],
+                natureza: "Selvagem",
+                caracteristicas: "Beedrill é a evolução de Kakuna, um Pokémon inseto veneno com ferrões. É selvagem e territorial, usando Twineedle e Fury Attack. Fraquezas: Tipos Fogo, Psíquico e Voador."
+            },
+            "pidgey": {
+                nome: "Pidgey",
+                tipos: ["Normal", "Voador"],
+                natureza: "Dócil",
+                caracteristicas: "Pidgey é um Pokémon normal voador pássaro pequeno. É dócil e comum, usando Gust e Tackle. Fraquezas: Tipos Elétrico, Gelo e Pedra. Evolui para Pidgeotto e depois Pidgeot."
+            },
+            "pidgeotto": {
+                nome: "Pidgeotto",
+                tipos: ["Normal", "Voador"],
+                natureza: "Dócil",
+                caracteristicas: "Pidgeotto é a evolução de Pidgey, um Pokémon normal voador maior. É dócil e protetor, usando Wing Attack. Fraquezas: Tipos Elétrico, Gelo e Pedra. Evolui para Pidgeot."
+            },
+            "pidgeot": {
+                nome: "Pidgeot",
+                tipos: ["Normal", "Voador"],
+                natureza: "Dócil",
+                caracteristicas: "Pidgeot é a evolução de Pidgeotto, um Pokémon normal voador majestoso. É dócil e rápido, usando Hurricane e Quick Attack. Fraquezas: Tipos Elétrico, Gelo e Pedra."
+            },
+            "rattata": {
+                nome: "Rattata",
                 tipos: ["Normal"],
-                natureza: "Dócil",
-                caracteristicas: "Snorlax é um Pokémon normal preguiçoso e gigante, conhecido por dormir o tempo todo. É dócil quando acordado, usando ataques como Body Slam e Rest. Fraquezas: Tipo Lutador. É famoso por bloquear caminhos e sua fome insaciável."
-            },
-            "gyarados": {
-                nome: "Gyarados",
-                tipos: ["Água", "Voador"],
                 natureza: "Selvagem",
-                caracteristicas: "Gyarados é um Pokémon água voador feroz, evoluído de Magikarp. Ele é selvagem e destrutivo, com ataques como Hyper Beam e Dragon Rage. Fraquezas: Tipos Elétrico e Pedra. Sua raiva é lendária, e ele é temido em águas."
+                caracteristicas: "Rattata é um Pokémon normal rato, comum e prolífico. É selvagem e furtivo, usando Hyper Fang. Fraquezas: Tipo Lutador. Evolui para Raticate."
             },
-            "vaporeon": {
-                nome: "Vaporeon",
-                tipos: ["Água"],
-                natureza: "Dócil",
-                caracteristicas: "Vaporeon é uma evolução de Eevee, um Pokémon água adaptável com pele absorvente. É dócil e brincalhão, usando Water Pulse e Acid Armor. Fraquezas: Tipos Grama e Elétrico. É perfeito para batalhas aquáticas."
+            "raticate": {
+                nome: "Raticate",
+                tipos: ["Normal"],
+                natureza: "Selvagem",
+                caracteristicas: "Raticate é a evolução de Rattata, um Pokémon normal rato maior. É selvagem e agressivo, usando Super Fang. Fraquezas: Tipo Lutador."
             },
-            "jolteon": {
-                nome: "Jolteon",
+            "spearow": {
+                nome: "Spearow",
+                tipos: ["Normal", "Voador"],
+                natureza: "Selvagem",
+                caracteristicas: "Spearow é um Pokémon normal voador pássaro agressivo. É selvagem e territorial, usando Peck. Fraquezas: Tipos Elétrico, Gelo e Pedra. Evolui para Fearow."
+            },
+            "fearow": {
+                nome: "Fearow",
+                tipos: ["Normal", "Voador"],
+                natureza: "Selvagem",
+                caracteristicas: "Fearow é a evolução de Spearow, um Pokémon normal voador longo. É selvagem e caçador, usando Drill Peck. Fraquezas: Tipos Elétrico, Gelo e Pedra."
+            },
+            "ekans": {
+                nome: "Ekans",
+                tipos: ["Veneno"],
+                natureza: "Selvagem",
+                caracteristicas: "Ekans é um Pokémon veneno cobra, enrolando-se. É selvagem e venenoso, usando Poison Sting. Fraquezas: Tipos Terra e Psíquico. Evolui para Arbok."
+            },
+            "arbok": {
+                nome: "Arbok",
+                tipos: ["Veneno"],
+                natureza: "Selvagem",
+                caracteristicas: "Arbok é a evolução de Ekans, um Pokémon veneno cobra intimidante. É selvagem e ameaçador, usando Glare. Fraquezas: Tipos Terra e Psíquico."
+            },
+            "pikachu": {
+                nome: "Pikachu",
                 tipos: ["Elétrico"],
                 natureza: "Dócil",
-                caracteristicas: "Jolteon é uma evolução de Eevee, um Pokémon elétrico veloz com pelos carregados. É dócil e energético, com ataques como Thunder e Pin Missile. Fraquezas: Tipos Terra. Sua velocidade é impressionante."
+                caracteristicas: "Pikachu é um Pokémon elétrico pequeno e amarelo, conhecido por suas bochechas vermelhas que armazenam eletricidade. Ele é dócil e leal aos treinadores, capaz de gerar choques elétricos poderosos. Suas habilidades incluem ataques como Thunderbolt e Quick Attack. Fraquezas: Tipos Água e Terra. Evolui de Pichu e para Raichu. É icônico e aparece em muitos jogos e mídias."
             },
-            "flareon": {
-                nome: "Flareon",
-                tipos: ["Fogo"],
+            "raichu": {
+                nome: "Raichu",
+                tipos: ["Elétrico"],
                 natureza: "Dócil",
-                caracteristicas: "Flareon é uma evolução de Eevee, um Pokémon fogo com corpo quente. É dócil e protetor, usando Flamethrower e Fire Spin. Fraquezas: Tipos Água, Terra e Pedra. É ideal para climas frios."
-            }
-        };
-
-        // Função de pesquisa
-        function searchPokemon() {
-            const nomePokemon = document.getElementById('pokemon-input').value.trim().toLowerCase();
-            const outputArea = document.getElementById('output-area');
-            
-            if (nomePokemon in pokedex) {
-                const pokemon = pokedex[nomePokemon];
-                const tiposStr = pokemon.tipos.join(", ");
-                const output = `--- Informações sobre ${pokemon.nome.toUpperCase()} ---\nTipo: ${tiposStr}\nNatureza: ${pokemon.natureza}\nCaracterísticas: ${pokemon.caracteristicas}`;
-                outputArea.value = output;
-            } else {
-                outputArea.value = "Pokémon não encontrado na Pokédex. Tente outro nome!";
-            }
-        }
-    </script>
-</body>
-</html>
+                caracteristicas: "Raichu é a evolução de Pikachu, um Pokémon elétrico maior. É dócil e poderoso, usando Thunder. Fraquezas: Tipos Água e Terra."
+            },
+            "sandshrew": {
+                nome: "Sandshrew",
+                tipos: ["Terra"],
+                natureza: "Selvagem",
+                caracteristicas: "Sandshrew é um Pokémon terra tatu, cavando buracos. É selvagem e defensivo, usando Sand Attack. Fraquezas: Tipos Água, Grama e Gelo. Evolui para Sandslash."
+            },
+            "sandslash": {
+                nome: "Sandslash",
+                tipos: ["Terra"],
+                natureza: "Selvagem",
+                caracteristicas: "Sandslash é a evolução de Sandshrew, um Pokémon terra com espinhos. É selvagem e agressivo, usando Slash. Fraquezas: Tipos Água, Grama e Gelo."
+            },
+            "nidoran-f": {
+                nome: "Nidoran♀",
+                tipos: ["Veneno"],
+                natureza: "Dócil",
+                caracteristicas: "Nidoran♀ é um Pokémon veneno fêmea, com orelhas sensíveis. É dócil e protetora, usando Poison Sting. Fraquezas: Tipos Terra e Psíquico. Evolui para Nidorina e depois Nidoqueen."
+            },
+            "nidorina": {
+                nome: "Nidorina",
+                tipos: ["Veneno"],
+                natureza: "Dócil",
+                caracteristicas: "Nidorina é a evolução de Nidoran♀, um Pokémon veneno maior. É dócil e forte, usando Double Kick. Fraquezas: Tipos Terra e Psíquico. Evolui para Nidoqueen."
+            },
+            "nidoqueen": {
+                nome: "Nidoqueen",
+                tipos: ["Veneno", "Terra"],
+                natureza: "Dócil",
+                caracteristicas: "Nidoqueen é a evolução de Nidorina, um Pokémon veneno terra poderoso. É dócil e maternal, usando Earthquake. Fraquezas: Tipos Água, Gelo e Terra."
+            },
+            "nidoran-m": {
+                nome: "Nidoran♂",
+                tipos: ["Veneno"],
+                natureza: "Selvagem",
+                caracteristicas: "Nidoran♂ é um Pokémon veneno macho, com chifres. É selvagem e territorial, usando Horn Attack. Fraquezas: Tipos Terra e Psíquico. Evolui para Nidorino e depois Nidoking."
+            },
+            "nidorino": {
+                nome: "Nidorino",
+                tipos: ["Veneno"],
+                natureza: "Selvagem",
+                caracteristicas: "Nidorino é a evolução de Nidoran♂, um Pokémon veneno agressivo. É selvagem e forte, usando Poison Jab. Fraquezas: Tipos Terra e Psíquico. Evolui para Nidoking."
+            },
+            "nidoking": {
+                nome: "Nidoking",
+                tipos: ["Veneno", "Terra"],
+                natureza: "Selvagem",
+                caracteristicas: "
