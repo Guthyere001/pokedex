@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #DC143C;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 600px;
+            height: 500px;
+            background-color: #DC143C;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .input-frame {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .input-label {
+            margin-right: 10px;
+        }
+        .input-field {
+            flex: 1;
+            padding: 5px;
+        }
+        .search-button {
+            background-color: #FFD700;
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .output-area {
+            flex: 1;
+            background-color: white;
+            color: black;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            padding: 10px;
+            border: none;
+            resize: none;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Pokédex</div>
+        <div class="input-frame">
+            <label class="input-label">Digite o nome do Pokémon:</label>
+            <input type="text" class="input-field" id="pokemon-input">
+            <button class="search-button" onclick="searchPokemon()">Pesquisar</button>
+        </div>
+        <textarea class="output-area" id="output-area" readonly></textarea>
+    </div>
+
+    <script>
+        // Dados da Pokédex (equivalente ao dicionário Python)
+        const pokedex = {
+            "pikachu": {
+                nome: "Pikachu",
+                tipos: ["Elétrico"],
+                natureza: "Dócil",
+                caracteristicas: "Pikachu é um Pokémon elétrico pequeno e amarelo, conhecido por suas bochechas vermelhas que armazenam eletricidade. Ele é dócil e leal aos treinadores, capaz de gerar choques elétricos poderosos. Suas habilidades incluem ataques como Thunderbolt e Quick Attack. Fraquezas: Tipos Água e Terra. Evolui de Pichu e para Raichu. É icônico e aparece em muitos jogos e mídias."
+            },
+            "charizard": {
+                nome: "Charizard",
+                tipos: ["Fogo", "Voador"],
+                natureza: "Selvagem",
+                caracteristicas: "Charizard é um Pokémon dragão de fogo imponente, com asas poderosas e uma chama na cauda que indica sua força. Ele é selvagem e territorial, cuspindo fogo intenso. Suas habilidades incluem Flamethrower, Dragon Claw e voos rápidos. Fraquezas: Tipos Água, Elétrico e Pedra. Evolui de Charmeleon e é uma das evoluções de Charmander. É um dos Pokémon mais populares e poderosos."
+            },
+            "bulbasaur": {
+                nome: "Bulbasaur",
+                tipos: ["Grama", "Veneno"],
+                natureza: "Dócil",
+                caracteristicas: "Bulbasaur é um Pokémon grama/veneno com uma planta nas costas que cresce com ele. É dócil e confiável, usando ataques como Vine Whip e Razor Leaf. Fraquezas: Tipos Fogo, Psíquico, Voador e Gelo. Evolui para Ivysaur e depois Venusaur. É conhecido por sua lealdade e habilidade de fotossíntese."
+            },
+            "mewtwo": {
+                nome: "Mewtwo",
+                tipos: ["Psíquico"],
+                natureza: "Selvagem",
+                caracteristicas: "Mewtwo é um Pokémon psíquico poderoso e misterioso, criado geneticamente. Ele é selvagem e imprevisível, com habilidades telepáticas incríveis como Psychic e Barrier. Fraquezas: Tipos Fantasma, Escuro e Inseto. Não evolui e é considerado um dos Pokémon mais fortes. Sua história envolve clonagem e busca por propósito."
+            },
+            "eevee": {
+                nome: "Eevee",
+                tipos: ["Normal"],
+                natureza: "Dócil",
+                caracteristicas: "Eevee é um Pokémon normal fofo e adaptável, capaz de evoluir em oito formas diferentes com itens ou condições específicas (como Vaporeon, Jolteon, Flareon, etc.). É dócil e brincalhão, com ataques como Tackle e Quick Attack. Fraquezas: Tipo Lutador. É popular por sua diversidade evolutiva."
+            },
+            "squirtle": {
+                nome: "Squirtle",
+                tipos: ["Água"],
+                natureza: "Dócil",
+                caracteristicas: "Squirtle é um Pokémon água tartaruga, com uma carapaça resistente e habilidades de natação. É dócil e protetor, lançando jatos de água com ataques como Water Gun e Bubble. Fraquezas: Tipos Grama e Elétrico. Evolui para Wartortle e depois Blastoise. É um parceiro inicial confiável em aventuras aquáticas."
+            },
+            "blastoise": {
+                nome: "Blastoise",
+                tipos: ["Água"],
+                natureza: "Dócil",
+                caracteristicas: "Blastoise é a evolução final de Squirtle, um Pokémon água poderoso com canhões nas costas para disparar água pressurizada. É dócil e estratégico, usando Hydro Pump e Skull Bash. Fraquezas: Tipos Grama e Elétrico. É conhecido por sua força e lealdade aos treinadores."
+            },
+            "gengar": {
+                nome: "Gengar",
+                tipos: ["Fantasma", "Veneno"],
+                natureza: "Selvagem",
+                caracteristicas: "Gengar é um Pokémon fantasma venenoso sorrateiro, evoluído de Haunter. Ele é selvagem e gosta de pregar peças, com habilidades como Shadow Ball e Hypnosis. Fraquezas: Tipos Fantasma, Psíquico e Terra. É notório por sua natureza travessa e aparições assustadoras."
+            },
+            "dragonite": {
+                nome: "Dragonite",
+                tipos: ["Dragão", "Voador"],
+                natureza: "Selvagem",
+                caracteristicas: "Dragonite é um Pokémon dragão voador gentil e poderoso, evoluído de Dragonair. Embora selvagem, é conhecido por ajudar humanos em situações de emergência. Suas habilidades incluem Dragon Rush e Hyper Beam. Fraquezas: Tipos Gelo, Pedra, Dragão e Fada. É um dos dragões mais respeitados."
+            },
+            "lucario": {
+                nome: "Lucario",
+                tipos: ["Lutador", "Aço"],
+                natureza: "Dócil",
+                caracteristicas: "Lucario é um Pokémon lutador aço com sentidos aguçados e aura. É dócil e leal, detectando emoções com ataques como Aura Sphere e Close Combat. Fraquezas: Tipos Fogo, Lutador e Terra. Evolui de Riolu com amizade. É inspirado em lobos e tem uma conexão espiritual."
+            },
+            "mew": {
+                nome: "Mew",
+                tipos: ["Psíquico"],
+                natureza: "Selvagem",
+                caracteristicas: "Mew é um Pokémon psíquico mítico e ancestral, capaz de aprender qualquer movimento. Ele é selvagem e curioso, com habilidades como Psychic e Transform. Fraquezas: Tipos Fantasma, Escuro e Inseto. É o ancestral de Mewtwo e raramente visto."
+            },
+            "snorlax": {
+                nome: "Snorlax",
+                tipos: ["Normal"],
+                natureza: "Dócil",
+                caracteristicas: "Snorlax é um Pokémon normal preguiçoso e gigante, conhecido por dormir o tempo todo. É dócil quando acordado, usando ataques como Body Slam e Rest. Fraquezas: Tipo Lutador. É famoso por bloquear caminhos e sua fome insaciável."
+            },
+            "gyarados": {
+                nome: "Gyarados",
+                tipos: ["Água", "Voador"],
+                natureza: "Selvagem",
+                caracteristicas: "Gyarados é um Pokémon água voador feroz, evoluído de Magikarp. Ele é selvagem e destrutivo, com ataques como Hyper Beam e Dragon Rage. Fraquezas: Tipos Elétrico e Pedra. Sua raiva é lendária, e ele é temido em águas."
+            },
+            "vaporeon": {
+                nome: "Vaporeon",
+                tipos: ["Água"],
+                natureza: "Dócil",
+                caracteristicas: "Vaporeon é uma evolução de Eevee, um Pokémon água adaptável com pele absorvente. É dócil e brincalhão, usando Water Pulse e Acid Armor. Fraquezas: Tipos Grama e Elétrico. É perfeito para batalhas aquáticas."
+            },
+            "jolteon": {
+                nome: "Jolteon",
+                tipos: ["Elétrico"],
+                natureza: "Dócil",
+                caracteristicas: "Jolteon é uma evolução de Eevee, um Pokémon elétrico veloz com pelos carregados. É dócil e energético, com ataques como Thunder e Pin Missile. Fraquezas: Tipos Terra. Sua velocidade é impressionante."
+            },
+            "flareon": {
+                nome: "Flareon",
+                tipos: ["Fogo"],
+                natureza: "Dócil",
+                caracteristicas: "Flareon é uma evolução de Eevee, um Pokémon fogo com corpo quente. É dócil e protetor, usando Flamethrower e Fire Spin. Fraquezas: Tipos Água, Terra e Pedra. É ideal para climas frios."
+            }
+        };
+
+        // Função de pesquisa
+        function searchPokemon() {
+            const nomePokemon = document.getElementById('pokemon-input').value.trim().toLowerCase();
+            const outputArea = document.getElementById('output-area');
+            
+            if (nomePokemon in pokedex) {
+                const pokemon = pokedex[nomePokemon];
+                const tiposStr = pokemon.tipos.join(", ");
+                const output = `--- Informações sobre ${pokemon.nome.toUpperCase()} ---\nTipo: ${tiposStr}\nNatureza: ${pokemon.natureza}\nCaracterísticas: ${pokemon.caracteristicas}`;
+                outputArea.value = output;
+            } else {
+                outputArea.value = "Pokémon não encontrado na Pokédex. Tente outro nome!";
+            }
+        }
+    </script>
+</body>
+</html>
